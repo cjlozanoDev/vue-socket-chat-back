@@ -14,6 +14,17 @@ class Users {
     const peopleOfRoom = this.users
     return peopleOfRoom
   }
+
+  deleteUser(id) {
+    const indexUser = this.users.findIndex(user => user.id === id)
+    if(!indexUser) {
+      return null
+    }
+    const userAux = this.users[indexUser]
+    this.users.splice(indexUser, 1)
+
+    return userAux
+  }
 }
 
 module.exports = {

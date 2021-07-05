@@ -14,7 +14,17 @@ io.on('connection', (client) => {
       })
     }
     users.addUser(client.id, data.name, data.room)
-
+    client.broadcast.emit('listUsers', users.getPeopleOfRoom())
     callBack(users.getPeopleOfRoom())
   })
+
+  client.on('disconnect', () => {
+    const userDeleted = users.deleteUser(client.id)
+    if(userDeleted) {
+      console.log('Se ha borrado al usuario', userDeleted)
+      client.broadcast.emit('createMessage', `${userDeleted.name} salió de la sala`)
+      client.broadcast.emit('listUsers', users.getPeopleOfRoom())
+    }
+  })
+
 })
