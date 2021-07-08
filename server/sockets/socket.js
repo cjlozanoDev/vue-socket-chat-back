@@ -1,5 +1,6 @@
 const { io } = require('../server')
 const { Users } = require('../classes/users')
+const { createMessage } = require('../utils/utils')
 
 const users = new Users()
 
@@ -22,7 +23,7 @@ io.on('connection', (client) => {
     const userDeleted = users.deleteUser(client.id)
     if(userDeleted) {
       console.log('Se ha borrado al usuario', userDeleted)
-      client.broadcast.emit('createMessage', `${userDeleted.name} salió de la sala`)
+      client.broadcast.emit('createMessage', createMessage('Administrador', `${userDeleted.name} salió de la sala`))
       client.broadcast.emit('listUsers', users.getPeopleOfRoom())
     }
   })
