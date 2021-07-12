@@ -6,8 +6,7 @@ class Users {
   addUser(id, name, room) {
     const user = {id, name, room}
     this.users.push(user)
-
-    return this.users
+    console.log('hola, he entrado')
   }
 
   getPeopleOfRoom() {
@@ -15,9 +14,15 @@ class Users {
     return peopleOfRoom
   }
 
+  getUser(id) {
+    const person = this.users.find(user => user.id === id)
+    return person
+  }
+
   deleteUser(id) {
     const indexUser = this.users.findIndex(user => user.id === id)
-    if(!indexUser) {
+  
+    if(indexUser === -1) {
       return null
     }
     const userAux = this.users[indexUser]
