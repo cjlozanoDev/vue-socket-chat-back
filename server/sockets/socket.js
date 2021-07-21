@@ -15,21 +15,24 @@ io.on('connection', (client) => {
         message: 'EL nombre/sala es necesario'
       })
     }
+    client.join(data.room)
+      
     users.addUser(client.id, data.name, data.room)
   
     console.log('Ha entrado en la sala', data)
-  
-    client.broadcast.emit('listUsers', users.getPeopleOfRoom())
-    client.broadcast.emit('createMessage', createMessage('Administrador', `${data.name} entró en la sala`))
-    callBack(users.getPeopleOfRoom())
+    
+
+    client.broadcast.to(data.room).emit('listUsers', users.getPeopleOfRoom(data.room))
+    client.broadcast.to(data.room).emit('createMessage', createMessage('Administrador', `${data.name} entró en la sala`))
+    callBack(users.getPeopleOfRoom(data.room))
   })
 
   client.on('disconnect', () => {
     const userDeleted = users.deleteUser(client.id)
     if(userDeleted) {
       console.log('Se ha borrado al usuario', userDeleted)
-      client.broadcast.emit('createMessage', createMessage('Administrador', `${userDeleted.name} salió de la sala`))
-      client.broadcast.emit('listUsers', users.getPeopleOfRoom())
+      client.broadcast.to(userDeleted.room).emit('createMessage', createMessage('Administrador', `${userDeleted.name} salió de la sala`))
+      client.broadcast.to(userDeleted.room).emit('listUsers', users.getPeopleOfRoom(userDeleted.room))
     }
   })
 
@@ -37,7 +40,7 @@ io.on('connection', (client) => {
     const user = users.getUser(client.id)
     const message = createMessage(user.name, data.message)
   
-    client.broadcast.emit('createMessage', message)
+    client.broadcast.to(user.room).emit('createMessage', message)
     callBack(message)
 
   })

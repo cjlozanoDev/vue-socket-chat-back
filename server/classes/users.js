@@ -9,8 +9,8 @@ class Users {
     console.log('hola, he entrado')
   }
 
-  getPeopleOfRoom() {
-    const peopleOfRoom = this.users
+  getPeopleOfRoom(room) {
+    const peopleOfRoom = this.users.filter(user => user.room === room)
     return peopleOfRoom
   }
 
